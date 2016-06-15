@@ -20,6 +20,11 @@ static final int cylinderResolution = 8;
 static final float cylinderBaseSize = 8, cylinderHeight = 25;
 ArrayList<PVector> cylinders = new ArrayList<PVector>();
 
+//Définition des surfaces
+float barHeight = 0, playerMax = 0;
+int count = 0, maxNb = 40, maxBarHeight = barChartHeight - 3;
+ArrayList<Integer> barChartValues = new ArrayList<Integer>();
+
 //Définition de la caméra
 HScrollBar scrollBar;
 PImage sVid, sDetect;
