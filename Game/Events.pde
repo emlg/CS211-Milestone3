@@ -1,3 +1,23 @@
+void keyPressed(){
+  if( key == CODED){
+    if(keyCode == SHIFT){
+      shiftMode = true;
+      isPaused = true;
+      cam.pause();
+    }
+  }
+}
+
+void keyReleased(){
+  if(key == CODED){
+    if(keyCode == SHIFT){
+      shiftMode = false;
+      isPaused = false;
+      cam.play();
+    }
+  }
+}
+
 void mouseWheel(MouseEvent event) {
   change += event.getCount();
   change = change*0.1;
@@ -13,8 +33,6 @@ void mouseClicked(){
   if(shiftMode){
     PVector position = new PVector(mouseX, mouseY);
     PVector p2 = new PVector(mouseX - width/2, mouseY - height/2);
-    PVector upLeft = new PVector(width/2f - boxX/2f, height/2f - boxZ/2f);
-    PVector bottomRight =  new PVector(width/2f + boxX/2f, height/2f + boxZ/2f);
     if( position.x >= upLeft.x + Cylinder.cylinderBaseSize
      && position.x <= bottomRight.x - Cylinder.cylinderBaseSize
      && position.y >= upLeft.y + Cylinder.cylinderBaseSize

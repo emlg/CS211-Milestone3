@@ -1,8 +1,6 @@
 class Cylinder{
 
-static final float cylinderBaseSize = 8;
-static final float cylinderHeight = 25;
-static final int cylinderResolution = 8;
+
 PShape openCylinder;
 PShape closeBottom;
 PShape closeUp;
