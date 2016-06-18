@@ -1,9 +1,3 @@
-// definition of the table constants
-float discretizationStepsPhi = 0.06f;
-float discretizationStepsR = 2.5f;
-int phiDim = (int) (Math.PI / discretizationStepsPhi);
-PImage houghImg ;
-
 class HoughComparator implements java.util.Comparator<Integer> {
   int[] accumulator;
 
@@ -13,8 +7,7 @@ class HoughComparator implements java.util.Comparator<Integer> {
 
   @Override
     public int compare(Integer l1, Integer l2) {
-    if (accumulator[l1] > accumulator[l2]
-      || (accumulator[l1] == accumulator[l2] && l1 < l2)) return -1;
+    if (accumulator[l1] > accumulator[l2] || (accumulator[l1] == accumulator[l2] && l1 < l2)) return -1;
     return 1;
   }
 }
@@ -26,7 +19,6 @@ ArrayList<PVector> hough(PImage edgeImg, int nLines) {
   // dimensions of the accumulator
   int rDim = (int) (((edgeImg.width + edgeImg.height) * 2 + 1) / discretizationStepsR);
   int[] accumulator = new int[(phiDim + 2) * (rDim + 2)];
-
 
   // definition of line candidates
   for (int y = 0; y < edgeImg.height; y++)

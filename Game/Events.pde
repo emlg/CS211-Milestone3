@@ -1,11 +1,26 @@
+void keyPressed(){
+  if(key == CODED)
+    if(keyCode == SHIFT){
+      shiftMode = true;
+      isPaused = true;
+      cam.pause();
+    }
+}
+
+void keyReleased(){
+  if(key == CODED)
+    if(keyCode == SHIFT){
+      shiftMode = false;
+      isPaused = false;
+      cam.play();
+    }
+}
+
 void mouseWheel(MouseEvent event) {
   change += event.getCount();
   change = change*0.1;
-  if(change > 1.5) {
-     change = 1.5;
-  } else if (change < 0.2){
-    change = 0.2;
-  }
+  if(change > 1.5) change = 1.5;
+  else if (change < 0.2) change = 0.2;
   println(change);
 }
 
@@ -19,8 +34,7 @@ void mouseClicked(){
      && position.x <= bottomRight.x - Cylinder.cylinderBaseSize
      && position.y >= upLeft.y + Cylinder.cylinderBaseSize
      && position.y <= bottomRight.y - Cylinder.cylinderBaseSize
-     && ball.location.dist(p2) > ball.r + Cylinder.cylinderBaseSize){ 
+     && ball.location.dist(p2) > ball.r + Cylinder.cylinderBaseSize)
         cylinders.add(position);
-     }
   }
 }

@@ -2,7 +2,6 @@ import processing.video.*;
 Movie cam;
 PVector angles;
 PImage vid, detect;
-TwoDThreeD converter;
 List<PVector> corners;
 
 void setupCam() {
