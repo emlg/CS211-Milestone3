@@ -28,8 +28,6 @@ void mouseClicked(){
   if(shiftMode){
     PVector position = new PVector(mouseX, mouseY);
     PVector p2 = new PVector(mouseX - width/2, mouseY - height/2);
-    PVector upLeft = new PVector(width/2f - boxX/2f, height/2f - boxZ/2f);
-    PVector bottomRight =  new PVector(width/2f + boxX/2f, height/2f + boxZ/2f);
     if( position.x >= upLeft.x + Cylinder.cylinderBaseSize
      && position.x <= bottomRight.x - Cylinder.cylinderBaseSize
      && position.y >= upLeft.y + Cylinder.cylinderBaseSize

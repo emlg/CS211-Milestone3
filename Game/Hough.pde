@@ -34,18 +34,6 @@ ArrayList<PVector> hough(PImage edgeImg, int nLines) {
         }
       }
 
-  /*// definition of line candidates
-  for (int y = 0; y < edgeImg.height; y++)
-    for (int x = 0; x < edgeImg.width; x++)
-      if (brightness(edgeImg.pixels[y * edgeImg.width + x]) != 0) {
-       for (int phi = 0; phi < phiDim; phi++) {
-          float r = x * cos(phi*discretizationStepsPhi) + y * sin(phi*discretizationStepsPhi);
-          r = r/discretizationStepsR + (rDim - 1)/2; 
-          accumulator[round((phi+1)*(rDim+2) + r +1)] += 1;
-        }
-
-      }*/
-
   // choosing only the best candidates
   houghImg = createImage(rDim + 2, phiDim + 2, ALPHA);
   for (int i = 0; i < accumulator.length; i++) {

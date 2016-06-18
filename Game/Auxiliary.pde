@@ -1,8 +1,10 @@
-//Définition de la boite
-float boxX = 100, boxY = 10, boxZ = 100;
-
 //Définition de la rotation
 float change = 1;
+
+//Définition de la boite
+float boxX = 100, boxY = 10, boxZ = 100;
+PVector upLeft = new PVector(width/2f - boxX/2f, height/2f - boxZ/2f), 
+  bottomRight = new PVector(width/2f + boxX/2f, height/2f + boxZ/2f);
 
 //Définition de la balle
 float gravityCst = 0.9, normalForce = 1, mu = 0.15;
