@@ -1,16 +1,11 @@
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 class QuadGraph {
+  int[][] graph;
   List<int[]> cycles = new ArrayList<int[]>();
   List<int[]> quads = new ArrayList<int[]>();
 
-  int[][] graph;
-
   void build(List<PVector> lines, int width, int height) {
-
     int n = lines.size();
 
     // The maximum possible number of edges is n * (n - 1)/2
@@ -34,54 +29,36 @@ class QuadGraph {
    */
   boolean intersect(PVector line1, PVector line2, int width, int height) {
 
-    double sin_t1 = Math.sin(line1.y);
-    double sin_t2 = Math.sin(line2.y);
-    double cos_t1 = Math.cos(line1.y);
-    double cos_t2 = Math.cos(line2.y);
-    float r1 = line1.x;
-    float r2 = line2.x;
-
+    float r1 = line1.x, r2 = line2.x;
+    double cos_t1 = Math.cos(line1.y), cos_t2 = Math.cos(line2.y);
+    double sin_t1 = Math.sin(line1.y), sin_t2 = Math.sin(line2.y);
     double denom = cos_t2 * sin_t1 - cos_t1 * sin_t2;
 
     int x = (int) ((r2 * sin_t1 - r1 * sin_t2) / denom);
     int y = (int) ((-r2 * cos_t1 + r1 * cos_t2) / denom);
 
-    if (0 <= x && 0 <= y && width >= x && height >= y)
-      return true;
-    else
-      return false;
+    if (0 <= x && 0 <= y && width >= x && height >= y) return true;
+    else return false;
   }
 
   List<int[]> findCycles() {
 
     cycles.clear();
-    for (int i = 0; i < graph.length; i++) {
-      for (int j = 0; j < graph[i].length; j++) {
+    for (int i = 0; i < graph.length; i++) 
+      for (int j = 0; j < graph[i].length; j++) 
         findNewCycles(new int[] {graph[i][j]});
-      }
-    }
 
     quads.clear();
-    for (int i =0; i <cycles.size(); i++) {
-      if (cycles.get(i).length == 4) {
-        quads.add(cycles.get(i));
-      }
-    }
+    for (int i =0; i <cycles.size(); i++)
+      if (cycles.get(i).length == 4) quads.add(cycles.get(i));
 
-    /*for (int[] cy : cycles) {
-     String s = "" + cy[0];
-     for (int i = 1; i < cy.length; i++) {
-     s += "," + cy[i];
-     }
-     System.out.println(s);
-     }*/
     return quads;
   }
 
   void findNewCycles(int[] path)
   {
-    int n = path[0];
     int x;
+    int n = path[0];
     int[] sub = new int[path.length + 1];
 
     for (int i = 0; i < graph.length; i++)
@@ -116,12 +93,7 @@ class QuadGraph {
     Boolean ret = (a[0] == b[0]) && (a.length == b.length);
 
     for (int i = 1; ret && (i < a.length); i++)
-    {
-      if (a[i] != b[i])
-      {
-        ret = false;
-      }
-    }
+      if (a[i] != b[i]) ret = false;
 
     return ret;
   }
@@ -131,10 +103,7 @@ class QuadGraph {
   {
     int[] p = new int[path.length];
 
-    for (int i = 0; i < path.length; i++)
-    {
-      p[i] = path[path.length - 1 - i];
-    }
+    for (int i = 0; i < path.length; i++) p[i] = path[path.length - 1 - i];
 
     return normalize(p);
   }
@@ -165,13 +134,11 @@ class QuadGraph {
     Boolean ret = true;
 
     for (int[] p : cycles)
-    {
       if (equals(p, path))
       {
         ret = false;
         break;
       }
-    }
 
     return ret;
   }
@@ -182,12 +149,7 @@ class QuadGraph {
     int min = path[0];
 
     for (int p : path)
-    {
-      if (p < min)
-      {
-        min = p;
-      }
-    }
+      if (p < min) min = p;
 
     return min;
   }
@@ -198,13 +160,11 @@ class QuadGraph {
     Boolean ret = false;
 
     for (int p : path)
-    {
       if (p == n)
       {
         ret = true;
         break;
       }
-    }
 
     return ret;
   }
@@ -223,45 +183,21 @@ class QuadGraph {
    * @param c1
    */
   boolean isConvex(PVector c1, PVector c2, PVector c3, PVector c4) {
+    PVector v21 = PVector.sub(c1, c2), v32 = PVector.sub(c2, c3), v43 = PVector.sub(c3, c4), v14 = PVector.sub(c4, c1);
+    float i1 = v21.cross(v32).z, i2 = v32.cross(v43).z, i3 = v43.cross(v14).z, i4 = v14.cross(v21).z;
 
-    PVector v21= PVector.sub(c1, c2);
-    PVector v32= PVector.sub(c2, c3);
-    PVector v43= PVector.sub(c3, c4);
-    PVector v14= PVector.sub(c4, c1);
-
-    float i1=v21.cross(v32).z;
-    float i2=v32.cross(v43).z;
-    float i3=v43.cross(v14).z;
-    float i4=v14.cross(v21).z;
-
-    if (   (i1>0 && i2>0 && i3>0 && i4>0) 
-      || (i1<0 && i2<0 && i3<0 && i4<0))
-      return true;
-    else 
-    //System.out.println("Eliminating non-convex quad");
-    return false;
+    if ((i1>0 && i2>0 && i3>0 && i4>0) || (i1<0 && i2<0 && i3<0 && i4<0)) return true;
+    else return false;
   }
 
   /** Compute the area of a quad, and check it lays within a specific range
    */
   boolean validArea(PVector c1, PVector c2, PVector c3, PVector c4, float max_area, float min_area) {
-
-    PVector v21= PVector.sub(c1, c2);
-    PVector v32= PVector.sub(c2, c3);
-    PVector v43= PVector.sub(c3, c4);
-    PVector v14= PVector.sub(c4, c1);
-
-    float i1=v21.cross(v32).z;
-    float i2=v32.cross(v43).z;
-    float i3=v43.cross(v14).z;
-    float i4=v14.cross(v21).z;
-
+    PVector v21 = PVector.sub(c1, c2), v32 = PVector.sub(c2, c3), v43 = PVector.sub(c3, c4), v14 = PVector.sub(c4, c1);
+    float i1 = v21.cross(v32).z, i2 = v32.cross(v43).z, i3 = v43.cross(v14).z, i4 = v14.cross(v21).z;
     float area = Math.abs(0.5f * (i1 + i2 + i3 + i4));
 
-    //System.out.println(area);
-
     boolean valid = (area < max_area && area > min_area);
-
     if (!valid) System.out.println("Area out of range");
 
     return valid;
@@ -269,15 +205,8 @@ class QuadGraph {
 
 
   float area(PVector c1, PVector c2, PVector c3, PVector c4) {
-    PVector v21 = PVector.sub(c1, c2);
-    PVector v32 = PVector.sub(c2, c3);
-    PVector v43 = PVector.sub(c3, c4);
-    PVector v14 = PVector.sub(c4, c1);
-
-    float i1 = v21.cross(v32).z;
-    float i2 = v32.cross(v43).z;
-    float i3 = v43.cross(v14).z;
-    float i4 = v14.cross(v21).z;
+    PVector v21 = PVector.sub(c1, c2), v32 = PVector.sub(c2, c3), v43 = PVector.sub(c3, c4), v14 = PVector.sub(c4, c1);
+    float i1 = v21.cross(v32).z, i2 = v32.cross(v43).z, i3 = v43.cross(v14).z, i4 = v14.cross(v21).z;
 
     return Math.abs(0.5f * (i1 + i2 + i3 + i4)) / 2;
   }
@@ -286,22 +215,15 @@ class QuadGraph {
    * (the quad representing our board should be close to a rectangle)
    */
   boolean nonFlatQuad(PVector c1, PVector c2, PVector c3, PVector c4) {
-
-    // cos(70deg) ~= 0.3
     float min_cos = 0.5f;
 
-    PVector v21= PVector.sub(c1, c2);
-    PVector v32= PVector.sub(c2, c3);
-    PVector v43= PVector.sub(c3, c4);
-    PVector v14= PVector.sub(c4, c1);
+    PVector v21 = PVector.sub(c1, c2), v32 = PVector.sub(c2, c3), v43 = PVector.sub(c3, c4), v14 = PVector.sub(c4, c1);
+    float cos1 = Math.abs(v21.dot(v32) / (v21.mag() * v32.mag())), 
+      cos2 = Math.abs(v32.dot(v43) / (v32.mag() * v43.mag())), 
+      cos3 = Math.abs(v43.dot(v14) / (v43.mag() * v14.mag())), 
+      cos4 = Math.abs(v14.dot(v21) / (v14.mag() * v21.mag()));
 
-    float cos1=Math.abs(v21.dot(v32) / (v21.mag() * v32.mag()));
-    float cos2=Math.abs(v32.dot(v43) / (v32.mag() * v43.mag()));
-    float cos3=Math.abs(v43.dot(v14) / (v43.mag() * v14.mag()));
-    float cos4=Math.abs(v14.dot(v21) / (v14.mag() * v21.mag()));
-
-    if (cos1 < min_cos && cos2 < min_cos && cos3 < min_cos && cos4 < min_cos)
-      return true;
+    if (cos1 < min_cos && cos2 < min_cos && cos3 < min_cos && cos4 < min_cos) return true;
     else {
       System.out.println("Flat quad");
       return false;
@@ -312,26 +234,19 @@ class QuadGraph {
   List<PVector> sortCorners(List<PVector> quad) {
 
     // 1 - Sort corners so that they are ordered clockwise
-    PVector a = quad.get(0);
-    PVector b = quad.get(2);
-
+    PVector a = quad.get(0), b = quad.get(2);
     PVector center = new PVector((a.x+b.x)/2, (a.y+b.y)/2);
-
     Collections.sort(quad, new CWComparator(center));
-
-
 
     // 2 - Sort by upper left most corner
     PVector origin = new PVector(0, 0);
     float distToOrigin = 1000;
 
-    for (PVector p : quad) {
+    for (PVector p : quad)
       if (p.dist(origin) < distToOrigin) distToOrigin = p.dist(origin);
-    }
 
     while (quad.get(0).dist(origin) != distToOrigin)
       Collections.rotate(quad, 1);
-
 
     return quad;
   }
