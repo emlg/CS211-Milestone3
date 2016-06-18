@@ -2,10 +2,7 @@ class Mover {
   PVector location, velocity, gravity, friction;
 
   float r;
-  float gravityCst = 0.9;
-  float normalForce =1;
-  float mu = 0.15;
-  float frictionMagnitude = normalForce*mu;
+
 
   Mover() {
     location = new PVector(0, 0);
